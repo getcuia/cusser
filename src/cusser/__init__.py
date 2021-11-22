@@ -20,11 +20,24 @@ __all__ = ["Cusser"]
 class Cusser:
     """A curses wrapper that understands ANSI escape code sequences."""
 
-    ATTRIBUTE_MAP = {
+    _ON_ATTR_MAP = {
+        Attribute.NORMAL: curses.A_NORMAL,
         Attribute.BOLD: curses.A_BOLD,
         Attribute.DIM: curses.A_DIM,
+        Attribute.ITALIC: curses.A_ITALIC,
+        Attribute.UNDERLINE: curses.A_UNDERLINE,
         Attribute.BLINK: curses.A_BLINK,
-        Attribute.NORMAL: curses.A_NORMAL,
+        Attribute.REVERSE: curses.A_REVERSE,
+        Attribute.HIDDEN: curses.A_INVIS,
+    }
+
+    _OFF_ATTR_MAP = {
+        Attribute.NEITHER_BOLD_NOR_DIM: curses.A_BOLD | curses.A_DIM,
+        Attribute.NOT_ITALIC: curses.A_ITALIC,
+        Attribute.NOT_UNDERLINE: curses.A_UNDERLINE,
+        Attribute.NOT_BLINK: curses.A_BLINK,
+        Attribute.NOT_REVERSE: curses.A_REVERSE,
+        Attribute.NOT_HIDDEN: curses.A_INVIS,
     }
 
     window: curses._CursesWindow
@@ -39,7 +52,12 @@ class Cusser:
             if isinstance(instruction, Text):
                 self.window.addstr(instruction)
             elif isinstance(instruction, SetAttribute):
-                self.window.attron(self.ATTRIBUTE_MAP[instruction.attribute])
+                if instruction.attribute in self._ON_ATTR_MAP:
+                    self.window.attron(self._ON_ATTR_MAP[instruction.attribute])
+                elif instruction.attribute in self._OFF_ATTR_MAP:
+                    self.window.attroff(self._OFF_ATTR_MAP[instruction.attribute])
+                else:
+                    raise ValueError(f"Unknown attribute {instruction.attribute}")
             elif isinstance(instruction, SetColor):
                 pass
             else:
