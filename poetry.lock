@@ -172,6 +172,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "ochre"
+version = "0.1.1"
+description = "A tiny Python package for working with colors in a pragmatic way"
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[[package]]
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
@@ -314,6 +322,17 @@ python-versions = ">=3.6"
 pbr = ">=2.0.0,<2.1.0 || >2.1.0"
 
 [[package]]
+name = "stransi"
+version = "0.1.0"
+description = "A lightweight parser for ANSI escape sequences"
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+ochre = ">=0.1.0,<0.2.0"
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -348,7 +367,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "512363f5d94d30256c9af930a6e888ca7a197c7c825c0d48d681b29d38e5253e"
+content-hash = "5e52498fadf74b62eed404759c588d25bf9879ad5129c8d2db27a72c0049fe18"
 
 [metadata.files]
 atomicwrites = [
@@ -427,6 +446,10 @@ mypy = [
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
     {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
+]
+ochre = [
+    {file = "ochre-0.1.1-py3-none-any.whl", hash = "sha256:c6f8ce567e8cdfea16f381131c90ae71e71d5a7a0a81e6ea03d9db0f0ee26d8b"},
+    {file = "ochre-0.1.1.tar.gz", hash = "sha256:c4b19895bb8d1a5b06bb2aac7a68294a7680fd18e53f5fffa00f5318ec2f0b05"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
@@ -561,6 +584,10 @@ smmap = [
 stevedore = [
     {file = "stevedore-3.5.0-py3-none-any.whl", hash = "sha256:a547de73308fd7e90075bb4d301405bebf705292fa90a90fc3bcf9133f58616c"},
     {file = "stevedore-3.5.0.tar.gz", hash = "sha256:f40253887d8712eaa2bb0ea3830374416736dc8ec0e22f5a65092c1174c44335"},
+]
+stransi = [
+    {file = "stransi-0.1.0-py3-none-any.whl", hash = "sha256:c5c2c21b782f0d33d055356e09f1c3f692c21ee14cb8addadaadd35075461b60"},
+    {file = "stransi-0.1.0.tar.gz", hash = "sha256:313a42aa8c4026260a67e1679a906c713784cd749ea20278a7ef4bc01a5ed60d"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
