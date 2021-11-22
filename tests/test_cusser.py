@@ -14,6 +14,7 @@ def test_cusser():
     """Ensure the wrapper works."""
 
     def _app(stdscr):
+        stdscr = Cusser(stdscr)
         text = "\033[1;5;33mHello \033[2mWorld\033[0m!"
         stdscr.addstr(text)
         stdscr.refresh()

@@ -17,3 +17,7 @@ class Cusser:
     """A curses wrapper that understands ANSI escape code sequences."""
 
     window: curses._CursesWindow
+
+    def __getattr__(self, name):
+        """Forward all other calls to the underlying window."""
+        return getattr(self.window, name)
