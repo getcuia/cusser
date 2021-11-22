@@ -7,7 +7,7 @@ import curses
 from dataclasses import dataclass
 from typing import Text
 
-from stransi import Ansi, SetAttribute, SetColor
+from stransi import Ansi, SetAttribute
 from stransi.attribute import Attribute
 
 __version__ = "0.1.0"
@@ -58,7 +58,5 @@ class Cusser:
                     self.window.attroff(self._OFF_ATTR_MAP[instruction.attribute])
                 else:
                     raise ValueError(f"Unknown attribute {instruction.attribute}")
-            elif isinstance(instruction, SetColor):
-                pass
             else:
                 raise NotImplementedError(instruction)
