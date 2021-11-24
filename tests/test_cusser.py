@@ -2,11 +2,9 @@
 
 import curses
 from functools import reduce
-from typing import Callable, Text
 
-from stransi import Ansi
-
-from cusser import Cusser, __version__
+from cusser import __version__
+from cusser._misc import _SUPPORTED_STYLE_TAGS, _app
 
 
 def test_version():
@@ -14,32 +12,10 @@ def test_version():
     assert __version__ == "0.1.0"
 
 
-def test_cusser():
-    """Ensure the wrapper works."""
-
-    def _tag(start: Text, end: Text = "\033[0m") -> Callable[[Text], Ansi]:
-        def decorator(text: Text) -> Ansi:
-            return Ansi(f"{start}{text}{end}")
-
-        return decorator
-
-    normal = _tag("\033[0m", "")
-    bold = _tag("\033[1m", "\033[22m")
-    dim = _tag("\033[2m", "\033[22m")
-    italic = _tag("\033[3m", "\033[23m")
-    underline = _tag("\033[4m", "\033[24m")
-    blink = _tag("\033[5m", "\033[25m")
-    reverse = _tag("\033[7m", "\033[27m")
-    hidden = _tag("\033[8m", "\033[28m")
-
-    ALL_STYLES = (normal, bold, dim, italic, underline, blink, reverse, hidden)
-
-    def _app(stdscr):
-        stdscr = Cusser(stdscr)
-        message = "The quick brown fox jumps over the lazy dog"
-        text = reduce(lambda acc, style: acc + style(message) + "\n", ALL_STYLES, "")
-        stdscr.addstr(text)
-        stdscr.refresh()
-        stdscr.getch()
-
-    _app(curses.initscr())
+def test_styles():
+    """Ensure styles don't break."""
+    message = "The quick brown fox jumps over the lazy dog"
+    text = reduce(
+        lambda acc, style: acc + style(message) + "\n", _SUPPORTED_STYLE_TAGS, ""
+    )
+    _app(curses.initscr(), text)
