@@ -41,6 +41,16 @@ _SUPPORTED_STYLE_TAGS = (
 )
 
 
+def _colortag(start: Text) -> Callable[[Text], Ansi]:
+    """Define a tag function for a color ANSI escape sequence."""
+    return _tag(start, "\033[39m")
+
+
+_red = _colortag("\033[31m")
+
+_SUPPORTED_COLOR_TAGS = (_red,)
+
+
 def _app(stdscr: Cusser | curses._CursesWindow, text: Text) -> None:
     """Start a new application for testing."""
     if not isinstance(stdscr, Cusser):
