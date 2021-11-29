@@ -21,12 +21,14 @@ class ColorManager:
     """A class for managing curses colors and color pairs."""
 
     color_indices: dict[ochre.Color, int] = field(default_factory=dict)
+    next_index = 0
 
     def add(self, color: ochre.Color) -> None:
         """Register a color with the color manager."""
         h = hex(color)
         if h not in self.color_indices:
-            self.color_indices[h] = len(self.color_indices)
+            self.color_indices[h] = self.next_index
+            self.next_index += 1
 
     def discard(self, color: ochre.Color) -> None:
         """Unregister a color from the color manager."""

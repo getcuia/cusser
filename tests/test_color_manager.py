@@ -9,16 +9,20 @@ from cusser.color_manager import ColorManager
 @pytest.fixture
 def color_manager():
     """Return a new ColorManager."""
-    return ColorManager()
+    color_manager = ColorManager()
+    color_manager.add(ochre.WebColor("blue"))
+    return color_manager
 
 
 def test_color_manager(color_manager):
     """Test adding, getting, and removing colors."""
+    color_manager.discard(ochre.RGB(0, 0, 1))
+
     color_manager.add(ochre.Hex("#ff0000"))
 
     assert list(color_manager.colors) == [ochre.RGB(1, 0, 0)]
 
-    assert color_manager.color_indices == {"0xff0000": 0}
+    assert color_manager.color_indices == {"0xff0000": 1}
     assert len(color_manager.color_indices) == 1
 
     assert ochre.RGB(1, 0, 0) in color_manager
