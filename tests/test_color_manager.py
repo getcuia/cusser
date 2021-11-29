@@ -76,3 +76,22 @@ def test_pair_management(color_manager: ColorManager):
 
     assert ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")) not in color_manager
     assert len(color_manager) == 4
+
+
+def test_managing_defaults(color_manager: ColorManager):
+    """Test managing default colors."""
+
+    assert None in color_manager
+    assert ColorPair(None, None) in color_manager
+
+    color_manager.add(None)
+    color_manager.add(ColorPair(None, None))
+
+    assert None in color_manager
+    assert ColorPair(None, None) in color_manager
+
+    color_manager.discard(None)
+    color_manager.discard(ColorPair(None, None))
+
+    assert None in color_manager
+    assert ColorPair(None, None) in color_manager

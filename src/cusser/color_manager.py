@@ -17,6 +17,11 @@ class ColorPair:
     foreground: Optional[ochre.Color] = None
     background: Optional[ochre.Color] = None
 
+    @property
+    def is_default(self) -> bool:
+        """Return True if this color pair is the default."""
+        return self.foreground is None or self.background is None
+
 
 # TODO: make color and color pair hashable?
 
@@ -31,8 +36,11 @@ class ColorManager:
     pair_indices: dict[tuple[Text, Text], int] = field(default_factory=dict)
     next_pair_index = 0
 
-    def add(self, value: ochre.Color | ColorPair) -> None:
+    def add(self, value: Optional[ochre.Color] | ColorPair) -> None:
         """Register a color or color pair with the color manager."""
+        if value is None:
+            return
+
         if isinstance(value, ochre.Color):
             self.add_color(value)
         elif isinstance(value, ColorPair):
@@ -40,8 +48,11 @@ class ColorManager:
         else:
             raise TypeError(f"Unsupported type: {type(value)}")
 
-    def add_color(self, color: ochre.Color) -> None:
+    def add_color(self, color: Optional[ochre.Color]) -> None:
         """Register a color with the color manager."""
+        if color is None:
+            return
+
         c = hex(color)
         if c in self.color_indices:
             return
@@ -51,6 +62,9 @@ class ColorManager:
 
     def add_pair(self, pair: ColorPair) -> None:
         """Register a color pair with the color manager."""
+        if pair.is_default:
+            return
+
         self.add_color(pair.foreground)
         self.add_color(pair.background)
 
@@ -61,8 +75,11 @@ class ColorManager:
         self.pair_indices[p] = self.next_pair_index
         self.next_pair_index += 1
 
-    def discard(self, value: ochre.Color | ColorPair) -> None:
+    def discard(self, value: Optional[ochre.Color] | ColorPair) -> None:
         """Unregister a color or color pair from the color manager."""
+        if value is None:
+            return
+
         if isinstance(value, ochre.Color):
             self.discard_color(value)
         elif isinstance(value, ColorPair):
@@ -70,8 +87,11 @@ class ColorManager:
         else:
             raise TypeError(f"Unsupported type: {type(value)}")
 
-    def discard_color(self, color: ochre.Color) -> None:
+    def discard_color(self, color: Optional[ochre.Color]) -> None:
         """Unregister a color from the color manager."""
+        if color is None:
+            return
+
         c = hex(color)
         if c not in self.color_indices:
             return
@@ -80,6 +100,9 @@ class ColorManager:
 
     def discard_pair(self, pair: ColorPair) -> None:
         """Unregister a color pair from the color manager."""
+        if pair.is_default:
+            return
+
         p = (hex(pair.foreground), hex(pair.background))
         if p not in self.pair_indices:
             return
@@ -99,11 +122,17 @@ class ColorManager:
             self.pair_indices.keys(),
         )
 
-    def __contains__(self, value: ochre.Color | ColorPair) -> bool:
+    def __contains__(self, value: Optional[ochre.Color] | ColorPair) -> bool:
         """Return whether a color or color pair is registered."""
+        if value is None:
+            return True
+
         if isinstance(value, ochre.Color):
             return value in self.colors
         elif isinstance(value, ColorPair):
+            if value.is_default:
+                return True
+
             return value in self.pairs
         else:
             raise TypeError(f"Unsupported type: {type(value)}")
