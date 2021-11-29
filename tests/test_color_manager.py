@@ -1,25 +1,35 @@
 """Tests for the color manager class."""
 
-
 import ochre
+import pytest
 
 from cusser.color_manager import ColorManager
 
 
-def test_color_manager_add_color():
-    """Test adding a color to the color manager."""
-    color_manager = ColorManager()
+@pytest.fixture
+def color_manager():
+    """Return a new ColorManager."""
+    return ColorManager()
+
+
+def test_color_manager(color_manager):
+    """Test adding, getting, and removing colors."""
     color_manager.add(ochre.Hex("#ff0000"))
+
     assert list(color_manager.colors) == [ochre.RGB(1, 0, 0)]
-    assert len(color_manager) == 1
+
+    assert color_manager.color_indices == {"0xff0000": 0}
+    assert len(color_manager.color_indices) == 1
+
     assert ochre.RGB(1, 0, 0) in color_manager
+    assert len(color_manager) == 1
 
-
-def test_color_manager_discard_color():
-    """Test discarding a color from the color manager."""
-    color_manager = ColorManager()
-    color_manager.add(ochre.Hex("#ff0000"))
     color_manager.discard(ochre.Hex("#ff0000"))
+
     assert list(color_manager.colors) == []
-    assert len(color_manager) == 0
+
+    assert color_manager.color_indices == {}
+    assert len(color_manager.color_indices) == 0
+
     assert ochre.RGB(1, 0, 0) not in color_manager
+    assert len(color_manager) == 0
