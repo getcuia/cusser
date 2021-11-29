@@ -80,7 +80,6 @@ def test_pair_management(color_manager: ColorManager):
 
 def test_managing_defaults(color_manager: ColorManager):
     """Test managing default colors."""
-
     assert None in color_manager
     assert ColorPair(None, None) in color_manager
 

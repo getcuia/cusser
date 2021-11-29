@@ -23,9 +23,6 @@ class ColorPair:
         return self.foreground is None or self.background is None
 
 
-# TODO: make color and color pair hashable?
-
-
 @dataclass
 class ColorManager:
     """A class for managing curses colors and color pairs."""
