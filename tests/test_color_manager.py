@@ -5,7 +5,7 @@ import curses
 import ochre
 import pytest
 
-from cusser._color_manager import ColorManager
+from cusser.color_manager import ColorManager
 
 
 @pytest.fixture
