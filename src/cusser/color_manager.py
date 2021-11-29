@@ -1,8 +1,10 @@
 """Utilities for managing colors and color pairs in curses."""
 
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Iterable, Optional
+from typing import Iterable, Optional, Text
 
 import ochre
 
@@ -16,30 +18,95 @@ class ColorPair:
     background: Optional[ochre.Color] = None
 
 
+# TODO: make color and color pair hashable?
+
+
 @dataclass
 class ColorManager:
     """A class for managing curses colors and color pairs."""
 
-    color_indices: dict[ochre.Color, int] = field(default_factory=dict)
-    next_index = 0
+    color_indices: dict[Text, int] = field(default_factory=dict)
+    next_color_index = 0
 
-    def add(self, color: ochre.Color) -> None:
+    pair_indices: dict[tuple[Text, Text], int] = field(default_factory=dict)
+    next_pair_index = 0
+
+    def add(self, value: ochre.Color | ColorPair) -> None:
+        """Register a color or color pair with the color manager."""
+        if isinstance(value, ochre.Color):
+            self.add_color(value)
+        elif isinstance(value, ColorPair):
+            self.add_pair(value)
+        else:
+            raise TypeError(f"Unsupported type: {type(value)}")
+
+    def add_color(self, color: ochre.Color) -> None:
         """Register a color with the color manager."""
-        h = hex(color)
-        if h not in self.color_indices:
-            self.color_indices[h] = self.next_index
-            self.next_index += 1
+        c = hex(color)
+        if c in self.color_indices:
+            return
 
-    def discard(self, color: ochre.Color) -> None:
+        self.color_indices[c] = self.next_color_index
+        self.next_color_index += 1
+
+    def add_pair(self, pair: ColorPair) -> None:
+        """Register a color pair with the color manager."""
+        self.add_color(pair.foreground)
+        self.add_color(pair.background)
+
+        p = (hex(pair.foreground), hex(pair.background))
+        if p in self.pair_indices:
+            return
+
+        self.pair_indices[p] = self.next_pair_index
+        self.next_pair_index += 1
+
+    def discard(self, value: ochre.Color | ColorPair) -> None:
+        """Unregister a color or color pair from the color manager."""
+        if isinstance(value, ochre.Color):
+            self.discard_color(value)
+        elif isinstance(value, ColorPair):
+            self.discard_pair(value)
+        else:
+            raise TypeError(f"Unsupported type: {type(value)}")
+
+    def discard_color(self, color: ochre.Color) -> None:
         """Unregister a color from the color manager."""
-        h = hex(color)
-        if h in self.color_indices:
-            del self.color_indices[h]
+        c = hex(color)
+        if c not in self.color_indices:
+            return
+
+        del self.color_indices[c]
+
+    def discard_pair(self, pair: ColorPair) -> None:
+        """Unregister a color pair from the color manager."""
+        p = (hex(pair.foreground), hex(pair.background))
+        if p not in self.pair_indices:
+            return
+
+        del self.pair_indices[p]
 
     @property
     def colors(self) -> Iterable[ochre.Color]:
         """Return all colors currently registered."""
         return map(ochre.Hex, self.color_indices.keys())
+
+    @property
+    def pairs(self) -> Iterable[ColorPair]:
+        """Return all color pairs currently registered."""
+        return map(
+            lambda p: ColorPair(foreground=ochre.Hex(p[0]), background=ochre.Hex(p[1])),
+            self.pair_indices.keys(),
+        )
+
+    def __contains__(self, value: ochre.Color | ColorPair) -> bool:
+        """Return whether a color or color pair is registered."""
+        if isinstance(value, ochre.Color):
+            return value in self.colors
+        elif isinstance(value, ColorPair):
+            return value in self.pairs
+        else:
+            raise TypeError(f"Unsupported type: {type(value)}")
 
     def __len__(self) -> int:
         """Return the number of colors currently registered."""
