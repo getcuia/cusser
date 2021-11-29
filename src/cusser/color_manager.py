@@ -122,6 +122,10 @@ class ColorManager:
             self.pair_indices.keys(),
         )
 
+    def __iter__(self) -> Iterable[ochre.Color]:
+        """Return an iterator over all colors currently registered."""
+        return self.colors
+
     def __contains__(self, value: Optional[ochre.Color] | ColorPair) -> bool:
         """Return whether a color or color pair is registered."""
         if value is None:
@@ -140,7 +144,3 @@ class ColorManager:
     def __len__(self) -> int:
         """Return the number of colors currently registered."""
         return len(self.color_indices)
-
-    def __iter__(self) -> Iterable[ochre.Color]:
-        """Return an iterator over all colors currently registered."""
-        return self.colors
