@@ -11,7 +11,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(
             f"usage: {sys.argv[0]} <example>, where <example> is one of: "
-            "'attributes', 'colors', 'clear'"
+            "'attributes', 'colors', 'clear', 'cursor'"
         )
         sys.exit(1)
 
@@ -29,10 +29,12 @@ if __name__ == "__main__":
         )
     elif sys.argv[1] == "clear":
         text = f"{message}\033[2JScreen cleared!"
+    elif sys.argv[1] == "cursor":
+        text = f"{message}\033[H\033[B\033[C{message}\033[3;3H{message}"
     else:
         raise ValueError(
             f"unknown example: {sys.argv[1]}, must be one of: "
-            "'attributes', 'colors', 'clear'"
+            "'attributes', 'colors', 'clear', 'cursor'"
         )
 
     curses.wrapper(lambda stdscr: _app(stdscr, text))

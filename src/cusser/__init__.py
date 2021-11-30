@@ -8,10 +8,11 @@ from dataclasses import dataclass
 from typing import Text
 
 import ochre
-from stransi import Ansi, SetAttribute, SetClear, SetColor
+from stransi import Ansi, SetAttribute, SetClear, SetColor, SetCursor
 from stransi.attribute import Attribute
 from stransi.clear import Clear
 from stransi.color import ColorRole
+from stransi.cursor import CursorMove
 
 from .color_manager import ColorManager, ColorPair
 
@@ -92,6 +93,8 @@ class Cusser:
                 self._set_color(instruction.role, instruction.color)
             elif isinstance(instruction, SetClear):
                 self._set_clear(instruction.region)
+            elif isinstance(instruction, SetCursor):
+                self._set_cursor(instruction.move)
             else:
                 raise NotImplementedError(instruction)
 
@@ -127,6 +130,16 @@ class Cusser:
             self.window.clrtoeol()
         else:
             raise ValueError(f"Unsupported clear region {region}")
+
+    def _set_cursor(self, move: CursorMove) -> None:
+        """Set the current cursor position."""
+        if not move.relative:
+            y, x = move.y, move.x
+        else:
+            y, x = self.window.getyx()
+            y += move.y
+            x += move.x
+        self.window.move(y, x)
 
     def __getattr__(self, name):
         """Forward all other calls to the underlying window."""
