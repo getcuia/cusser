@@ -59,6 +59,28 @@ _white = _colortag("\033[97m")
 _SUPPORTED_COLOR_TAGS = (_black, _red, _green, _yellow, _blue, _magenta, _cyan, _white)
 
 
+def _move(y: int = 0, x: int = 0) -> Ansi:
+    """Move the cursor to the given position."""
+    return Ansi(f"\033[{y};{x}H")
+
+
+def _step(y: int, x: int) -> Ansi:
+    """Move the cursor relative to its current position."""
+    res = ""
+
+    if x > 0:
+        res += f"\033[{x}C"
+    elif x < 0:
+        res += f"\033[{-x}D"
+
+    if y > 0:
+        res += f"\033[{y}B"
+    elif y < 0:
+        res += f"\033[{-y}A"
+
+    return Ansi(res)
+
+
 def _app(
     stdscr: Cusser | curses._CursesWindow, text: Text | Callable[[], Text]
 ) -> None:
