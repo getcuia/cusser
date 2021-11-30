@@ -46,13 +46,24 @@ def _colortag(start: Text) -> Callable[[Text], Ansi]:
     return _tag(start, "\033[39m")
 
 
+_black = _colortag("\033[30m")
 _red = _colortag("\033[31m")
+_green = _colortag("\033[32m")
+_yellow = _colortag("\033[33m")
+_blue = _colortag("\033[34m")
+_magenta = _colortag("\033[35m")
+_cyan = _colortag("\033[36m")
+_white = _colortag("\033[37m")
 
-_SUPPORTED_COLOR_TAGS = (_red,)
+_SUPPORTED_COLOR_TAGS = (_black, _red, _green, _yellow, _blue, _magenta, _cyan, _white)
 
 
-def _app(stdscr: Cusser | curses._CursesWindow, text: Text) -> None:
+def _app(
+    stdscr: Cusser | curses._CursesWindow, text: Text | Callable[[], Text]
+) -> None:
     """Start a new application for testing."""
+    if callable(text):
+        text = text()
     if not isinstance(stdscr, Cusser):
         stdscr = Cusser(stdscr)
     stdscr.addstr(text)
