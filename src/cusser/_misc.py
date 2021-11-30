@@ -46,14 +46,15 @@ def _colortag(start: Text) -> Callable[[Text], Ansi]:
     return _tag(start, "\033[39m")
 
 
-_black = _colortag("\033[30m")
-_red = _colortag("\033[31m")
-_green = _colortag("\033[32m")
-_yellow = _colortag("\033[33m")
-_blue = _colortag("\033[34m")
-_magenta = _colortag("\033[35m")
-_cyan = _colortag("\033[36m")
-_white = _colortag("\033[37m")
+_black = _colortag("\033[90m")
+_red = _colortag("\033[91m")
+_green = _colortag("\033[92m")
+_yellow = _colortag("\033[93m")
+_blue = _colortag("\033[94m")
+_magenta = _colortag("\033[95m")
+_cyan = _colortag("\033[96m")
+_white = _colortag("\033[97m")
+
 
 _SUPPORTED_COLOR_TAGS = (_black, _red, _green, _yellow, _blue, _magenta, _cyan, _white)
 
