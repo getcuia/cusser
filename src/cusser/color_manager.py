@@ -103,8 +103,8 @@ class ColorManager:
         self, pair: ColorPair, callback: bool = True, allow_zero: bool = False
     ) -> None:
         """Register a color pair with the color manager."""
-        self.add_color(pair.foreground)
-        self.add_color(pair.background)
+        self.add_color(pair.foreground, callback=callback)
+        self.add_color(pair.background, callback=callback)
 
         p = encode(pair)
         if p in self.pair_indices:
