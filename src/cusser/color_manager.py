@@ -33,41 +33,34 @@ class ColorManager:
     pair_indices: dict[tuple[Text, Text], int] = field(default_factory=dict)
     next_pair_index = 0
 
-    on_add_color: Optional[Callable[[ochre.Color], None]] = None
-    on_add_pair: Optional[Callable[[ColorPair], None]] = None
+    on_add_color: Optional[Callable[[ochre.Color, ColorManager], None]] = None
+    on_add_pair: Optional[Callable[[ColorPair, ColorManager], None]] = None
 
-    _current_pair: ColorPair = ColorPair()
+    current_pair: ColorPair = ColorPair()
 
     @property
     def foreground(self) -> ochre.Color:
         """Return the current foreground color."""
-        return self._current_pair.foreground
+        return self.current_pair.foreground
 
     @property
     def background(self) -> ochre.Color:
         """Return the current background color."""
-        return self._current_pair.background
+        return self.current_pair.background
 
     @foreground.setter
     def foreground(self, color: ochre.Color) -> None:
         """Set the current foreground color."""
-        self._current_pair.foreground = color
+        self.current_pair.foreground = color
         self.add_color(color)
-        self.add_pair(self._current_pair)
+        self.add_pair(self.current_pair)
 
     @background.setter
     def background(self, color: ochre.Color) -> None:
         """Set the current background color."""
-        self._current_pair.background = color
+        self.current_pair.background = color
         self.add_color(color)
-        self.add_pair(self._current_pair)
-
-    @property
-    def current_pair_index(self) -> int:
-        """Return the index of the current color pair."""
-        if self._current_pair.is_default:
-            return -1
-        return self.pair_indices[(hex(self.foreground), hex(self.background))]
+        self.add_pair(self.current_pair)
 
     def add(self, value: Optional[ochre.Color] | ColorPair) -> None:
         """Register a color or color pair with the color manager."""
@@ -92,9 +85,8 @@ class ColorManager:
 
         self.color_indices[c] = self.next_color_index
         self.next_color_index += 1
-
         if self.on_add_color:
-            self.on_add_color(color)
+            self.on_add_color(color, self)
 
     def add_pair(self, pair: ColorPair) -> None:
         """Register a color pair with the color manager."""
@@ -110,9 +102,8 @@ class ColorManager:
 
         self.pair_indices[p] = self.next_pair_index
         self.next_pair_index += 1
-
         if self.on_add_pair:
-            self.on_add_pair(pair)
+            self.on_add_pair(pair, self)
 
     def discard(self, value: Optional[ochre.Color] | ColorPair) -> None:
         """Unregister a color or color pair from the color manager."""
@@ -161,9 +152,20 @@ class ColorManager:
             self.pair_indices.keys(),
         )
 
-    def __iter__(self) -> Iterable[ochre.Color]:
-        """Return an iterator over all colors currently registered."""
-        return self.colors
+    def __getitem__(self, value: Optional[ochre.Color] | ColorPair) -> int:
+        """Return the index of a color or color pair."""
+        if value is None:
+            return -1
+
+        if isinstance(value, ochre.Color):
+            return self.color_indices[hex(value)]
+        elif isinstance(value, ColorPair):
+            if value.is_default:
+                return -1
+
+            return self.pair_indices[(hex(value.foreground), hex(value.background))]
+        else:
+            raise TypeError(f"Unsupported type: {type(value)}")
 
     def __contains__(self, value: Optional[ochre.Color] | ColorPair) -> bool:
         """Return whether a color or color pair is registered."""
@@ -179,6 +181,10 @@ class ColorManager:
             return value in self.pairs
         else:
             raise TypeError(f"Unsupported type: {type(value)}")
+
+    def __iter__(self) -> Iterable[ochre.Color]:
+        """Return an iterator over all colors currently registered."""
+        return self.colors
 
     def __len__(self) -> int:
         """Return the number of colors currently registered."""

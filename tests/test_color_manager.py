@@ -90,13 +90,15 @@ def test_callbacks(color_manager: ColorManager):
     assert last_color is None
     assert last_pair is None
 
-    def color_callback(color: ochre.Color) -> None:
+    def color_callback(color: ochre.Color, manager: ColorManager) -> None:
         nonlocal last_color
         last_color = color
+        print(f"color_callback: {color} has index {manager[color]}")
 
-    def pair_callback(pair: ColorPair) -> None:
+    def pair_callback(pair: ColorPair, manager: ColorManager) -> None:
         nonlocal last_pair
         last_pair = pair
+        print(f"pair_callback: {pair} has index {manager[pair]}")
 
     color_manager.on_add_color = color_callback
     color_manager.on_add_pair = pair_callback
