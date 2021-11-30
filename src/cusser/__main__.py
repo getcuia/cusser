@@ -5,7 +5,15 @@ import curses
 import sys
 from functools import reduce
 
-from ._misc import _SUPPORTED_ATTRIBUTE_TAGS, _SUPPORTED_COLOR_TAGS, _app, _move, _step
+from ._misc import (
+    _SUPPORTED_ATTRIBUTE_TAGS,
+    _SUPPORTED_COLOR_TAGS,
+    _app,
+    _clear_line,
+    _clear_screen,
+    _move,
+    _step,
+)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -28,7 +36,7 @@ if __name__ == "__main__":
             lambda acc, color: acc + color(message) + "\n", _SUPPORTED_COLOR_TAGS, ""
         )
     elif sys.argv[1] == "clear":
-        text = f"{message}\033[2JScreen cleared!\n{message}\033[2K"
+        text = f"{message}{_clear_screen}Screen cleared!\n{message}{_clear_line}"
     elif sys.argv[1] == "cursor":
         text = f"{message}{_move()}{_step(1, 1)}{message}{_move(3, 3)}{message}"
     else:

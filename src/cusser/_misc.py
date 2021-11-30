@@ -81,6 +81,10 @@ def _step(y: int, x: int) -> Ansi:
     return Ansi(res)
 
 
+_clear_screen = Ansi("\033[2J")
+_clear_line = Ansi("\033[2K")
+
+
 def _app(
     stdscr: Cusser | curses._CursesWindow, text: Text | Callable[[], Text]
 ) -> None:
