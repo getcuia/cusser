@@ -63,6 +63,10 @@ class Cusser:
         Attribute.NOT_HIDDEN: curses.A_INVIS,
     }
 
+    def __post_init__(self):
+        """Initialize the color manager."""
+        curses.use_default_colors()
+
     def __getattr__(self, name):
         """Forward all other calls to the underlying window."""
         return getattr(self.window, name)
