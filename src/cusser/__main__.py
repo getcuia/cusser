@@ -10,7 +10,8 @@ from ._misc import _SUPPORTED_COLOR_TAGS, _SUPPORTED_STYLE_TAGS, _app
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(
-            f"usage: {sys.argv[0]} <example>, where <example> is one of: 'styles', 'colors'"
+            f"usage: {sys.argv[0]} <example>, where <example> is one of: "
+            "'styles', 'colors'"
         )
         sys.exit(1)
 
