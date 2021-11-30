@@ -65,6 +65,7 @@ class Cusser:
 
     def __post_init__(self):
         """Initialize the color manager."""
+        curses.start_color()
         curses.use_default_colors()
 
     def __getattr__(self, name):
