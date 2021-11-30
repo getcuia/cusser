@@ -126,6 +126,12 @@ class Cusser:
             self.window.erase()
         elif region == Clear.SCREEN_AFTER:
             self.window.clrtobot()
+        elif region == Clear.LINE:
+            # https://stackoverflow.com/a/20311594/4039050
+            y, x = self.window.getyx()
+            self.window.move(y, 0)
+            self.window.clrtoeol()
+            # self.window.move(y, x)
         elif region == Clear.LINE_AFTER:
             self.window.clrtoeol()
         else:

@@ -28,7 +28,7 @@ if __name__ == "__main__":
             lambda acc, color: acc + color(message) + "\n", _SUPPORTED_COLOR_TAGS, ""
         )
     elif sys.argv[1] == "clear":
-        text = f"{message}\033[2JScreen cleared!"
+        text = f"{message}\033[2JScreen cleared!\n{message}\033[2K"
     elif sys.argv[1] == "cursor":
         text = f"{message}\033[H\033[B\033[C{message}\033[3;3H{message}"
     else:
