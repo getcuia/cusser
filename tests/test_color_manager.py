@@ -79,7 +79,7 @@ def test_pair_management(color_manager: ColorManager):
 
 
 def test_managing_defaults(color_manager: ColorManager):
-    """Test managing default colors."""
+    """Test managing default colors and pair."""
     assert None in color_manager
     assert ColorPair(None, None) in color_manager
 
@@ -94,3 +94,24 @@ def test_managing_defaults(color_manager: ColorManager):
 
     assert None in color_manager
     assert ColorPair(None, None) in color_manager
+
+
+def test_managing_current_pair(color_manager: ColorManager):
+    """Test managing the current pair."""
+    assert color_manager.current_pair.is_default
+
+    color_manager.current_pair.foreground = ochre.WebColor("blue")
+    assert color_manager.current_pair == ColorPair(ochre.RGB(0, 0, 1), None)
+
+    color_manager.current_pair.background = ochre.WebColor("black")
+    assert color_manager.current_pair == ColorPair(
+        ochre.RGB(0, 0, 1), ochre.RGB(0, 0, 0)
+    )
+
+    color_manager.current_pair = ColorPair(ochre.RGB(1, 1, 1), ochre.RGB(0, 0, 0))
+    assert color_manager.current_pair == ColorPair(
+        ochre.Hex("#ffffff"), ochre.Hex("#000000")
+    )
+
+    color_manager.current_pair = ColorPair()
+    assert color_manager.current_pair.is_default

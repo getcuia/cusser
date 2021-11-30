@@ -33,6 +33,8 @@ class ColorManager:
     pair_indices: dict[tuple[Text, Text], int] = field(default_factory=dict)
     next_pair_index = 0
 
+    current_pair: ColorPair = ColorPair()
+
     def add(self, value: Optional[ochre.Color] | ColorPair) -> None:
         """Register a color or color pair with the color manager."""
         if value is None:
