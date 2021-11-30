@@ -29,7 +29,7 @@ _blink = _tag("\033[5m", "\033[25m")
 _reverse = _tag("\033[7m", "\033[27m")
 _hidden = _tag("\033[8m", "\033[28m")
 
-_SUPPORTED_STYLE_TAGS = (
+_SUPPORTED_ATTRIBUTE_TAGS = (
     _normal,
     _bold,
     _dim,

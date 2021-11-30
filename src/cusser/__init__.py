@@ -8,8 +8,9 @@ from dataclasses import dataclass
 from typing import Text
 
 import ochre
-from stransi import Ansi, SetAttribute, SetColor
+from stransi import Ansi, SetAttribute, SetClear, SetColor
 from stransi.attribute import Attribute
+from stransi.clear import Clear
 from stransi.color import ColorRole
 
 from .color_manager import ColorManager, ColorPair
@@ -89,6 +90,8 @@ class Cusser:
                 self._set_attribute(instruction.attribute)
             elif isinstance(instruction, SetColor):
                 self._set_color(instruction.role, instruction.color)
+            elif isinstance(instruction, SetClear):
+                self._set_clear(instruction.region)
             else:
                 raise NotImplementedError(instruction)
 
@@ -99,7 +102,7 @@ class Cusser:
         elif attribute in self._OFF_ATTR_MAP:
             self.window.attroff(self._OFF_ATTR_MAP[attribute])
         else:
-            raise ValueError(f"Unknown attribute {attribute}")
+            raise ValueError(f"Unsupported attribute: {attribute}")
 
     def _set_color(self, role: ColorRole, color: ochre.Color) -> None:
         """Set the current color."""
@@ -113,6 +116,17 @@ class Cusser:
         self.window.attron(
             curses.color_pair(self.color_manager[self.color_manager.current_pair])
         )
+
+    def _set_clear(self, region: Clear) -> None:
+        """Set the current clear region."""
+        if region == Clear.SCREEN:
+            self.window.erase()
+        elif region == Clear.SCREEN_AFTER:
+            self.window.clrtobot()
+        elif region == Clear.LINE_AFTER:
+            self.window.clrtoeol()
+        else:
+            raise ValueError(f"Unsupported clear region {region}")
 
     def __getattr__(self, name):
         """Forward all other calls to the underlying window."""
