@@ -16,6 +16,7 @@ bandit = "^1.7.1"
 flake8 = "^4.0.1"
 black = {version = "^21.11b1", allow-prereleases = true}
 isort = "^5.10.1"
+pydocstyle = "^6.1.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
