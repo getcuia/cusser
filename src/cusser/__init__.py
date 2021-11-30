@@ -41,7 +41,9 @@ class Cusser:
     """A curses wrapper that understands ANSI escape code sequences."""
 
     window: curses._CursesWindow
-    color_manager = ColorManager(on_add_color=on_add_color, on_add_pair=on_add_pair)
+    color_manager: ColorManager = ColorManager(
+        on_add_color=on_add_color, on_add_pair=on_add_pair
+    )
 
     _ON_ATTR_MAP = {
         Attribute.NORMAL: curses.A_NORMAL,
@@ -64,13 +66,13 @@ class Cusser:
     }
 
     def __post_init__(self):
-        """Initialize the color manager."""
+        """
+        Initialize the color manager.
+
+        We assume the terminal actually supports colors.
+        """
         curses.start_color()
         curses.use_default_colors()
-
-    def __getattr__(self, name):
-        """Forward all other calls to the underlying window."""
-        return getattr(self.window, name)
 
     def addstr(self, text: Text) -> None:
         """Add a string to the window, interpreting ANSI escape codes."""
@@ -78,23 +80,34 @@ class Cusser:
             if isinstance(instruction, Text):
                 self.window.addstr(instruction)
             elif isinstance(instruction, SetAttribute):
-                if instruction.attribute in self._ON_ATTR_MAP:
-                    self.window.attron(self._ON_ATTR_MAP[instruction.attribute])
-                elif instruction.attribute in self._OFF_ATTR_MAP:
-                    self.window.attroff(self._OFF_ATTR_MAP[instruction.attribute])
-                else:
-                    raise ValueError(f"Unknown attribute {instruction.attribute}")
+                self._set_attribute(instruction.attribute)
             elif isinstance(instruction, SetColor):
-                if instruction.role == ColorRole.FOREGROUND:
-                    self.color_manager.foreground = instruction.color
-                elif instruction.role == ColorRole.BACKGROUND:
-                    self.color_manager.background = instruction.color
-                else:
-                    raise ValueError(f"Unknown color role {instruction.role}")
-                self.window.attron(
-                    curses.color_pair(
-                        self.color_manager[self.color_manager.current_pair]
-                    )
-                )
+                self._set_color(instruction.role, instruction.color)
             else:
                 raise NotImplementedError(instruction)
+
+    def _set_attribute(self, attribute: Attribute) -> None:
+        """Set the current attribute."""
+        if attribute in self._ON_ATTR_MAP:
+            self.window.attron(self._ON_ATTR_MAP[attribute])
+        elif attribute in self._OFF_ATTR_MAP:
+            self.window.attroff(self._OFF_ATTR_MAP[attribute])
+        else:
+            raise ValueError(f"Unknown attribute {attribute}")
+
+    def _set_color(self, role: ColorRole, color: ochre.Color) -> None:
+        """Set the current color."""
+        if role == ColorRole.FOREGROUND:
+            self.color_manager.foreground = color
+        elif role == ColorRole.BACKGROUND:
+            self.color_manager.background = color
+        else:
+            raise ValueError(f"Unknown color role {role}")
+
+        self.window.attron(
+            curses.color_pair(self.color_manager[self.color_manager.current_pair])
+        )
+
+    def __getattr__(self, name):
+        """Forward all other calls to the underlying window."""
+        return getattr(self.window, name)
