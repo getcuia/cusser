@@ -98,20 +98,28 @@ def test_managing_defaults(color_manager: ColorManager):
 
 def test_managing_current_pair(color_manager: ColorManager):
     """Test managing the current pair."""
-    assert color_manager.current_pair.is_default
+    assert color_manager.foreground is None
+    assert color_manager.background is None
 
-    color_manager.current_pair.foreground = ochre.WebColor("blue")
-    assert color_manager.current_pair == ColorPair(ochre.RGB(0, 0, 1), None)
+    color_manager.foreground = ochre.RGB(0, 0, 0.5)
+    assert color_manager.foreground == ochre.RGB(0, 0, 0.5)
+    assert color_manager.background is None
+    assert ochre.RGB(0, 0, 0.5) in color_manager
 
-    color_manager.current_pair.background = ochre.WebColor("black")
-    assert color_manager.current_pair == ColorPair(
-        ochre.RGB(0, 0, 1), ochre.RGB(0, 0, 0)
-    )
+    color_manager.background = ochre.WebColor("black")
+    assert color_manager.foreground == ochre.RGB(0, 0, 0.5)
+    assert color_manager.background == ochre.RGB(0, 0, 0)
+    assert ochre.Hex("#000000") in color_manager
 
-    color_manager.current_pair = ColorPair(ochre.RGB(1, 1, 1), ochre.RGB(0, 0, 0))
-    assert color_manager.current_pair == ColorPair(
-        ochre.Hex("#ffffff"), ochre.Hex("#000000")
-    )
+    color_manager.foreground = ochre.RGB(1, 1, 1)
+    color_manager.background = ochre.RGB(0, 0, 0)
+    assert color_manager.foreground == ochre.Hex("#ffffff")
+    assert color_manager.background == ochre.Hex("#000000")
+    assert ochre.Hex("#ffffff") in color_manager
+    assert ochre.Hex("#000000") in color_manager
 
-    color_manager.current_pair = ColorPair()
-    assert color_manager.current_pair.is_default
+    color_manager.foreground = None
+    color_manager.background = None
+    assert color_manager.foreground is None
+    assert color_manager.background is None
+    assert None in color_manager

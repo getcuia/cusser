@@ -33,7 +33,29 @@ class ColorManager:
     pair_indices: dict[tuple[Text, Text], int] = field(default_factory=dict)
     next_pair_index = 0
 
-    current_pair: ColorPair = ColorPair()
+    _current_pair: ColorPair = ColorPair()
+
+    @property
+    def foreground(self) -> ochre.Color:
+        """Return the current foreground color."""
+        return self._current_pair.foreground
+
+    @property
+    def background(self) -> ochre.Color:
+        """Return the current background color."""
+        return self._current_pair.background
+
+    @foreground.setter
+    def foreground(self, color: ochre.Color) -> None:
+        """Set the current foreground color."""
+        self.add_color(color)
+        self._current_pair.foreground = color
+
+    @background.setter
+    def background(self, color: ochre.Color) -> None:
+        """Set the current background color."""
+        self.add_color(color)
+        self._current_pair.background = color
 
     def add(self, value: Optional[ochre.Color] | ColorPair) -> None:
         """Register a color or color pair with the color manager."""
