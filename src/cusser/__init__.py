@@ -74,6 +74,12 @@ class Cusser:
         curses.start_color()
         curses.use_default_colors()
 
+        # We have to define the zero color pair here, otherwise we'll get a nasty
+        # error later.
+        self.color_manager.add_pair(
+            ColorPair(ochre.WebColor("white"), ochre.WebColor("black")), allow_zero=True
+        )
+
     def addstr(self, text: Text) -> None:
         """Add a string to the window, interpreting ANSI escape codes."""
         for instruction in Ansi(text).instructions():
