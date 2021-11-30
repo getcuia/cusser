@@ -79,12 +79,14 @@ class ColorManager:
         self.add_color(color)
         self.add_pair(self.current_pair)
 
-    def add(self, value: Optional[ochre.Color] | ColorPair) -> None:
+    def add(
+        self, value: Optional[ochre.Color] | ColorPair, allow_zero: bool = False
+    ) -> None:
         """Register a color or color pair with the color manager."""
         if value is None or isinstance(value, ochre.Color):
             self.add_color(value)
         elif isinstance(value, ColorPair):
-            self.add_pair(value)
+            self.add_pair(value, allow_zero=allow_zero)
         else:
             raise TypeError(f"Unsupported type: {type(value)}")
 

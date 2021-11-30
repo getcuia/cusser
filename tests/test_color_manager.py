@@ -12,8 +12,10 @@ from cusser.color_manager import ColorManager, ColorPair
 def color_manager() -> ColorManager:
     """Return a new ColorManager."""
     color_manager = ColorManager()
+    color_manager.add(
+        ColorPair(ochre.WebColor("white"), ochre.WebColor("black")), allow_zero=True
+    )
     color_manager.add(ColorPair(ochre.WebColor("blue"), ochre.WebColor("black")))
-    color_manager.add(ColorPair(ochre.WebColor("white"), ochre.WebColor("black")))
     return color_manager
 
 
