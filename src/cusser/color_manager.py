@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Iterable, Optional, Text
+from typing import Callable, Iterable, Optional, Text
 
 import ochre
 
@@ -33,6 +33,9 @@ class ColorManager:
     pair_indices: dict[tuple[Text, Text], int] = field(default_factory=dict)
     next_pair_index = 0
 
+    on_add_color: Optional[Callable[[ochre.Color], None]] = None
+    on_add_pair: Optional[Callable[[ColorPair], None]] = None
+
     _current_pair: ColorPair = ColorPair()
 
     @property
@@ -48,14 +51,16 @@ class ColorManager:
     @foreground.setter
     def foreground(self, color: ochre.Color) -> None:
         """Set the current foreground color."""
-        self.add_color(color)
         self._current_pair.foreground = color
+        self.add_color(color)
+        self.add_pair(self._current_pair)
 
     @background.setter
     def background(self, color: ochre.Color) -> None:
         """Set the current background color."""
-        self.add_color(color)
         self._current_pair.background = color
+        self.add_color(color)
+        self.add_pair(self._current_pair)
 
     @property
     def current_pair_index(self) -> int:
@@ -88,6 +93,9 @@ class ColorManager:
         self.color_indices[c] = self.next_color_index
         self.next_color_index += 1
 
+        if self.on_add_color:
+            self.on_add_color(color)
+
     def add_pair(self, pair: ColorPair) -> None:
         """Register a color pair with the color manager."""
         if pair.is_default:
@@ -102,6 +110,9 @@ class ColorManager:
 
         self.pair_indices[p] = self.next_pair_index
         self.next_pair_index += 1
+
+        if self.on_add_pair:
+            self.on_add_pair(pair)
 
     def discard(self, value: Optional[ochre.Color] | ColorPair) -> None:
         """Unregister a color or color pair from the color manager."""

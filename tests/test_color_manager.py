@@ -1,5 +1,7 @@
 """Tests for the color manager class."""
 
+from typing import Optional
+
 import ochre
 import pytest
 
@@ -76,6 +78,35 @@ def test_pair_management(color_manager: ColorManager):
 
     assert ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")) not in color_manager
     assert len(color_manager) == 4
+
+
+def test_callbacks(color_manager: ColorManager):
+    """Test callbacks for color and pair additions."""
+    last_color: Optional[ochre.Color] = None
+    last_pair: Optional[ColorPair] = None
+
+    color_manager.add(ochre.WebColor("violet"))
+    color_manager.add(ColorPair(ochre.WebColor("beige"), ochre.WebColor("lavender")))
+    assert last_color is None
+    assert last_pair is None
+
+    def color_callback(color: ochre.Color) -> None:
+        nonlocal last_color
+        last_color = color
+
+    def pair_callback(pair: ColorPair) -> None:
+        nonlocal last_pair
+        last_pair = pair
+
+    color_manager.on_add_color = color_callback
+    color_manager.on_add_pair = pair_callback
+
+    color_manager.add(ochre.WebColor("snow"))
+    assert last_color == ochre.WebColor("snow")
+
+    color_manager.add(ColorPair(ochre.WebColor("teal"), ochre.WebColor("gold")))
+    assert last_color == ochre.WebColor("gold")
+    assert last_pair == ColorPair(ochre.WebColor("teal"), ochre.WebColor("gold"))
 
 
 def test_managing_defaults(color_manager: ColorManager):
