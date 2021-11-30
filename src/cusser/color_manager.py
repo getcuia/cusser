@@ -99,7 +99,9 @@ class ColorManager:
         if callback and self.on_add_color:
             self.on_add_color(color, self)
 
-    def add_pair(self, pair: ColorPair, callback: bool = True) -> None:
+    def add_pair(
+        self, pair: ColorPair, callback: bool = True, allow_zero: bool = False
+    ) -> None:
         """Register a color pair with the color manager."""
         self.add_color(pair.foreground)
         self.add_color(pair.background)
@@ -107,6 +109,9 @@ class ColorManager:
         p = encode(pair)
         if p in self.pair_indices:
             return
+
+        if not allow_zero and self.next_pair_index == 0:
+            raise RuntimeError("Cannot redefine color pair 0")
 
         self.pair_indices[p] = self.next_pair_index
         self.next_pair_index += 1
