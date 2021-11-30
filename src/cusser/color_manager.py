@@ -57,6 +57,13 @@ class ColorManager:
         self.add_color(color)
         self._current_pair.background = color
 
+    @property
+    def current_pair_index(self) -> int:
+        """Return the index of the current color pair."""
+        if self._current_pair.is_default:
+            return -1
+        return self.pair_indices[(hex(self.foreground), hex(self.background))]
+
     def add(self, value: Optional[ochre.Color] | ColorPair) -> None:
         """Register a color or color pair with the color manager."""
         if value is None:
