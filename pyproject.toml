@@ -17,7 +17,6 @@ keywords = [
     "curses",
     "cusser",
     "ncurses",
-    "parser",
     "pdcurses",
     "terminal",
     "tui",
