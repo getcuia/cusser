@@ -20,6 +20,8 @@ sequences.
 
 -   ♻️ Easily integrate with the
     [standard `curses` module](https://docs.python.org/3/library/curses.html)
+-   🕹️ Use the same escape code sequences
+    [as you would with Colorama](https://github.com/tartley/colorama#recognised-ansi-sequences)
 -   🖍️ Only one dependency: [stransi](https://github.com/getcuia/stransi) (for
     actuallly parsing escape code sequences)
 -   🐍 Python 3.8+
