@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable, Iterable, Optional, Text
+from typing import Callable, Iterator, MutableSet, Optional, Text, Union
 
 import ochre
 
@@ -38,7 +38,7 @@ def encode(
 
 
 @dataclass
-class ColorManager:
+class ColorManager(MutableSet[Union[Optional[ochre.Color], ColorPair]]):
     """A class for managing curses colors and color pairs."""
 
     color_indices: dict[Optional[Text], int] = field(default_factory=lambda: {None: -1})
@@ -151,14 +151,14 @@ class ColorManager:
         del self.pair_indices[p]
 
     @property
-    def colors(self) -> Iterable[ochre.Color]:
+    def colors(self) -> Iterator[ochre.Color]:
         """Return all colors currently registered."""
         return map(
             lambda c: ochre.Hex(c) if c is not None else None, self.color_indices.keys()
         )
 
     @property
-    def pairs(self) -> Iterable[ColorPair]:
+    def pairs(self) -> Iterator[ColorPair]:
         """Return all color pairs currently registered."""
         return map(
             lambda p: ColorPair(
@@ -194,7 +194,7 @@ class ColorManager:
 
         raise TypeError(f"Unsupported type: {type(value)}")
 
-    def __iter__(self) -> Iterable[ochre.Color]:
+    def __iter__(self) -> Iterator[ochre.Color]:
         """Return an iterator over all colors currently registered."""
         return self.colors
 
