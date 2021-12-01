@@ -48,7 +48,7 @@ class ColorManager(
     next_color_index = 0
 
     pair_indices: dict[tuple[Optional[Text], Optional[Text]], int] = field(
-        default_factory=lambda: {(None, None): -1}
+        default_factory=dict
     )
     next_pair_index = 0
 
@@ -115,8 +115,10 @@ class ColorManager(
         self, pair: ColorPair, callback: bool = True, allow_zero: bool = False
     ) -> None:
         """Register a color pair with the color manager."""
-        self.add_color(pair.foreground, callback=callback)
+        # We want background to be added first because curses tends to use the
+        # first (zeroth) color as the "unknown" color, and it is usually black.
         self.add_color(pair.background, callback=callback)
+        self.add_color(pair.foreground, callback=callback)
 
         p = encode(pair)
         if p in self.pair_indices:
