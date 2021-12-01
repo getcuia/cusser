@@ -1,3 +1,6 @@
+[![PyPI](https://img.shields.io/pypi/v/cusser)](https://pypi.org/project/cusser/)
+[![Python package](https://github.com/getcuia/cusser/actions/workflows/python-package.yml/badge.svg)](https://github.com/getcuia/cusser/actions/workflows/python-package.yml)
+[![PyPI - License](https://img.shields.io/pypi/l/cusser)](https://github.com/getcuia/cusser/blob/main/LICENSE)
 
 # [cusser](https://github.com/getcuia/cusser#readme) 🤬
 
