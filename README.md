@@ -51,6 +51,8 @@ In [3]: def app(stdscr) -> None:
    ...:     stdscr.getch()
    ...:
 
+![Screenshot](https://github.com/getcuia/cusser/raw/main/screenshot.png)
+
 In [4]: curses.wrapper(app)
 ```
 
