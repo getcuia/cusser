@@ -39,8 +39,8 @@ def encode(
 
 @dataclass
 class ColorManager(
-    MutableSet[Union[Optional[ochre.Color], ColorPair]],
     Mapping[Union[Optional[ochre.Color], ColorPair], int],
+    MutableSet[Union[Optional[ochre.Color], ColorPair]],
 ):
     """A class for managing curses colors and color pairs."""
 
@@ -168,16 +168,6 @@ class ColorManager(
 
         if isinstance(value, ColorPair):
             return self.discard_pair(value)
-
-        raise TypeError(f"Unsupported type: {type(value)}")
-
-    def __contains__(self, value: Optional[ochre.Color] | ColorPair) -> bool:
-        """Return whether a color or color pair is registered."""
-        if value is None or isinstance(value, ochre.Color):
-            return encode(value) in self.color_indices
-
-        if isinstance(value, ColorPair):
-            return encode(value) in self.pair_indices
 
         raise TypeError(f"Unsupported type: {type(value)}")
 
