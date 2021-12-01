@@ -37,5 +37,5 @@ jobs:
             - name: Test with pytest
               run: |
                   python -m pip install .
-                  export TERM=xterm
+                  export TERM=console
                   pytest
