@@ -13,7 +13,6 @@ import ochre
 class ColorPair:
     """A color pair of foreground and background colors."""
 
-    # TODO: move this to ochre
     foreground: Optional[ochre.Color] = None
     background: Optional[ochre.Color] = None
 
@@ -22,7 +21,7 @@ class ColorPair:
 def encode(
     value: Optional[ochre.Color] | ColorPair,
 ) -> Optional[Text] | tuple[Optional[Text], Optional[Text]]:
-    """Encode a color or color pair into optional strings to use as dictionary keys."""
+    """Encode a color or color pair into optional strings to use as dictionary key."""
     if value is None:
         return None
 
@@ -60,17 +59,17 @@ class ColorManager:
         """Return the current foreground color."""
         return self.current_pair.foreground
 
-    @property
-    def background(self) -> ochre.Color:
-        """Return the current background color."""
-        return self.current_pair.background
-
     @foreground.setter
     def foreground(self, color: ochre.Color) -> None:
         """Set the current foreground color."""
         self.current_pair.foreground = color
         self.add_color(color)
         self.add_pair(self.current_pair)
+
+    @property
+    def background(self) -> ochre.Color:
+        """Return the current background color."""
+        return self.current_pair.background
 
     @background.setter
     def background(self, color: ochre.Color) -> None:
@@ -84,11 +83,12 @@ class ColorManager:
     ) -> None:
         """Register a color or color pair with the color manager."""
         if value is None or isinstance(value, ochre.Color):
-            self.add_color(value)
-        elif isinstance(value, ColorPair):
-            self.add_pair(value, allow_zero=allow_zero)
-        else:
-            raise TypeError(f"Unsupported type: {type(value)}")
+            return self.add_color(value)
+
+        if isinstance(value, ColorPair):
+            return self.add_pair(value, allow_zero=allow_zero)
+
+        raise TypeError(f"Unsupported type: {type(value)}")
 
     def add_color(self, color: Optional[ochre.Color], callback: bool = True) -> None:
         """Register a color with the color manager."""
@@ -96,6 +96,7 @@ class ColorManager:
         if c in self.color_indices:
             return
 
+        assert c is None or isinstance(c, Text)
         self.color_indices[c] = self.next_color_index
         self.next_color_index += 1
         if callback and self.on_add_color:
@@ -115,6 +116,7 @@ class ColorManager:
         if not allow_zero and self.next_pair_index == 0:
             raise RuntimeError("Cannot redefine color pair 0")
 
+        assert isinstance(p, tuple)
         self.pair_indices[p] = self.next_pair_index
         self.next_pair_index += 1
         if callback and self.on_add_pair:
@@ -123,11 +125,12 @@ class ColorManager:
     def discard(self, value: Optional[ochre.Color] | ColorPair) -> None:
         """Unregister a color or color pair from the color manager."""
         if value is None or isinstance(value, ochre.Color):
-            self.discard_color(value)
-        elif isinstance(value, ColorPair):
-            self.discard_pair(value)
-        else:
-            raise TypeError(f"Unsupported type: {type(value)}")
+            return self.discard_color(value)
+
+        if isinstance(value, ColorPair):
+            return self.discard_pair(value)
+
+        raise TypeError(f"Unsupported type: {type(value)}")
 
     def discard_color(self, color: Optional[ochre.Color]) -> None:
         """Unregister a color from the color manager."""
@@ -135,6 +138,7 @@ class ColorManager:
         if c not in self.color_indices:
             return
 
+        assert c is None or isinstance(c, Text)
         del self.color_indices[c]
 
     def discard_pair(self, pair: ColorPair) -> None:
@@ -143,6 +147,7 @@ class ColorManager:
         if p not in self.pair_indices:
             return
 
+        assert isinstance(p, tuple)
         del self.pair_indices[p]
 
     @property
@@ -166,10 +171,16 @@ class ColorManager:
     def __getitem__(self, value: Optional[ochre.Color] | ColorPair) -> int:
         """Return the index of a color or color pair."""
         if value is None or isinstance(value, ochre.Color):
-            return self.color_indices[encode(value)]
+            c = encode(value)
+
+            assert c is None or isinstance(c, Text)
+            return self.color_indices[c]
 
         if isinstance(value, ColorPair):
-            return self.pair_indices[encode(value)]
+            p = encode(value)
+
+            assert isinstance(p, tuple)
+            return self.pair_indices[p]
 
         raise TypeError(f"Unsupported type: {type(value)}")
 
