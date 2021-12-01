@@ -23,22 +23,22 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
-    message = "The quick brown fox jumps over the lazy dog"
+    MESSAGE = "The quick brown fox jumps over the lazy dog"
 
     if sys.argv[1] == "attributes":
         text = reduce(
-            lambda acc, attribute: acc + attribute(message) + "\n",
+            lambda acc, attribute: acc + attribute(MESSAGE) + "\n",
             _SUPPORTED_ATTRIBUTE_TAGS,
             "",
         )
     elif sys.argv[1] == "colors":
         text = reduce(
-            lambda acc, color: acc + color(message) + "\n", _SUPPORTED_COLOR_TAGS, ""
+            lambda acc, color: acc + color(MESSAGE) + "\n", _SUPPORTED_COLOR_TAGS, ""
         )
     elif sys.argv[1] == "clear":
-        text = f"{message}{_clear_screen}Screen cleared!\n{message}{_clear_line}"
+        text = f"{MESSAGE}{_clear_screen}Screen cleared!\n{MESSAGE}{_clear_line}"
     elif sys.argv[1] == "cursor":
-        text = f"{message}{_move()}{_step(1, 1)}{message}{_move(3, 3)}{message}"
+        text = f"{MESSAGE}{_move()}{_step(1, 1)}{MESSAGE}{_move(3, 3)}{MESSAGE}"
     else:
         raise ValueError(
             f"unknown example: {sys.argv[1]}, must be one of: "
