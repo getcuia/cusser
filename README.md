@@ -10,14 +10,18 @@
 
 > A curses wrapper that understands ANSI escape code sequences
 
-cusser is a tiny Python package for teaching
-[curses](https://docs.python.org/3/library/curses.html) how to use ANSI escape
-code sequences.
+cusser is a lightweight Python package for teaching
+[curses](https://docs.python.org/3/library/curses.html) how to use
+[ANSI escape code sequences](https://en.wikipedia.org/wiki/ANSI_escape_code). It
+works by wrapping the curses standard window object and intercepting escape code
+sequences.
 
 ## Features
 
 -   ♻️ Easily integrate with the
     [standard `curses` module](https://docs.python.org/3/library/curses.html)
+-   🖍️ Only one dependency: [stransi](https://github.com/getcuia/stransi) (for
+    actuallly parsing escape code sequences)
 -   🐍 Python 3.8+
 
 ## Installation
