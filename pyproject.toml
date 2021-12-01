@@ -10,11 +10,17 @@ repository = "https://github.com/getcuia/cusser"
 keywords = [
     "ansi-escape-codes",
     "ansi",
+    "cli",
+    "command-line",
     "console",
+    "cuia",
     "curses",
     "cusser",
+    "ncurses",
     "parser",
+    "pdcurses",
     "terminal",
+    "tui",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
