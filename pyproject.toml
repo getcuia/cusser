@@ -4,6 +4,18 @@ version = "0.1.0"
 description = "A curses wrapper that understands ANSI escape code sequences"
 authors = ["Felipe S. S. Schneider <schneider.felipe@posgrad.ufsc.br>"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/getcuia/cusser"
+repository = "https://github.com/getcuia/cusser"
+keywords = [
+    "ansi",
+    "curses",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
