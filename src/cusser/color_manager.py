@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable, Iterator, MutableSet, Optional, Text, Union
+from typing import Callable, Iterator, Mapping, MutableSet, Optional, Text, Union
 
 import ochre
 
@@ -38,7 +38,10 @@ def encode(
 
 
 @dataclass
-class ColorManager(MutableSet[Union[Optional[ochre.Color], ColorPair]]):
+class ColorManager(
+    MutableSet[Union[Optional[ochre.Color], ColorPair]],
+    Mapping[Union[Optional[ochre.Color], ColorPair], int],
+):
     """A class for managing curses colors and color pairs."""
 
     color_indices: dict[Optional[Text], int] = field(default_factory=lambda: {None: -1})
