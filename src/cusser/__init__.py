@@ -101,11 +101,12 @@ class Cusser:
     def _set_attribute(self, attribute: Attribute) -> None:
         """Set the current attribute."""
         if attribute in self._ON_ATTR_MAP:
-            self.window.attron(self._ON_ATTR_MAP[attribute])
-        elif attribute in self._OFF_ATTR_MAP:
-            self.window.attroff(self._OFF_ATTR_MAP[attribute])
-        else:
-            raise ValueError(f"Unsupported attribute: {attribute}")
+            return self.window.attron(self._ON_ATTR_MAP[attribute])
+
+        if attribute in self._OFF_ATTR_MAP:
+            return self.window.attroff(self._OFF_ATTR_MAP[attribute])
+
+        raise ValueError(f"Unsupported attribute: {attribute}")
 
     def _set_color(self, role: ColorRole, color: ochre.Color) -> None:
         """Set the current color."""
@@ -123,19 +124,22 @@ class Cusser:
     def _set_clear(self, region: Clear) -> None:
         """Set the current clear region."""
         if region == Clear.SCREEN:
-            self.window.erase()
-        elif region == Clear.SCREEN_AFTER:
-            self.window.clrtobot()
-        elif region == Clear.LINE:
+            return self.window.erase()
+
+        if region == Clear.SCREEN_AFTER:
+            return self.window.clrtobot()
+
+        if region == Clear.LINE:
             # https://stackoverflow.com/a/20311594/4039050
             y, x = self.window.getyx()
             self.window.move(y, 0)
-            self.window.clrtoeol()
+            return self.window.clrtoeol()
             # self.window.move(y, x)
-        elif region == Clear.LINE_AFTER:
-            self.window.clrtoeol()
-        else:
-            raise ValueError(f"Unsupported clear region {region}")
+
+        if region == Clear.LINE_AFTER:
+            return self.window.clrtoeol()
+
+        raise ValueError(f"Unsupported clear region {region}")
 
     def _set_cursor(self, move: CursorMove) -> None:
         """Set the current cursor position."""
