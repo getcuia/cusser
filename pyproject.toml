@@ -26,10 +26,10 @@ pytest = "^5.2"
 mypy = "^0.910"
 bandit = "^1.7.1"
 flake8 = "^4.0.1"
-black = {version = "^21.11b1", allow-prereleases = true}
+black = {version = "^21.10b0", allow-prereleases = true}
 isort = "^5.10.1"
 pydocstyle = "^6.1.1"
-pylint = "^2.12.1"
+pylint = "^2.11.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
