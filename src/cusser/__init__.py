@@ -24,14 +24,16 @@ __all__ = ["Cusser"]
 
 def on_add_color(color: ochre.Color, manager: ColorManager) -> None:
     """Initialize a color when it is added to the color manager."""
-    if curses.can_change_color():
+    if curses.has_colors() and curses.can_change_color():
         color = color.rgb
-        curses.init_color(
+        return curses.init_color(
             manager[color],
             int(1000 * color.red),
             int(1000 * color.green),
             int(1000 * color.blue),
         )
+
+    raise RuntimeError("Cannot initialize color")
 
 
 def on_add_pair(pair: ColorPair, manager: ColorManager) -> None:
