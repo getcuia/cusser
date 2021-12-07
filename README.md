@@ -49,7 +49,7 @@ In [3]: def app(stdscr) -> None:
    ...:     stdscr.addstr(
    ...:         f"\033[2J\033[{x};{y}H"
    ...:         "\033[1;32mHello "
-   ...:         f"\033[22;38;2;{';'.join(map(str, ultra_violet))}m"
+   ...:         f"\033[;3;38;2;{';'.join(map(str, ultra_violet))}m"
    ...:         "cusser"
    ...:         "\033[m 🤬!"
    ...:     )
@@ -58,6 +58,7 @@ In [3]: def app(stdscr) -> None:
    ...:
 
 In [4]: curses.wrapper(app)
+
 ```
 
 ![Screenshot](https://github.com/getcuia/cusser/raw/main/screenshot.png)
