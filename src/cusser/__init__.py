@@ -16,7 +16,7 @@ from stransi.cursor import CursorMove
 
 from .color_manager import ColorManager, ColorPair
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 __all__ = ["Cusser"]
