@@ -51,7 +51,7 @@ In [3]: def app(stdscr) -> None:
    ...:         "\033[1;32mHello "
    ...:         f"\033[22;38;2;{';'.join(map(str, ultra_violet))}m"
    ...:         "cusser"
-   ...:         "\033[0m 🤬!"
+   ...:         "\033[m 🤬!"
    ...:     )
    ...:     stdscr.refresh()
    ...:     stdscr.getch()

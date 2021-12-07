@@ -11,7 +11,8 @@ from stransi import Ansi
 from cusser import Cusser
 
 
-def _tag(start: Text, end: Text = "\033[0m") -> Callable[[Text], Ansi]:
+
+def _tag(start: Text, end: Text = "\033[m") -> Callable[[Text], Ansi]:
     """Define a tag function for ANSI escape sequences."""
 
     def decorator(text: Text) -> Ansi:
@@ -20,7 +21,7 @@ def _tag(start: Text, end: Text = "\033[0m") -> Callable[[Text], Ansi]:
     return decorator
 
 
-_normal = _tag("\033[0m", "")
+_normal = _tag("\033[m", "")
 _bold = _tag("\033[1m", "\033[22m")
 _dim = _tag("\033[2m", "\033[22m")
 _italic = _tag("\033[3m", "\033[23m")
