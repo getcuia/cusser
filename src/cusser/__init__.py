@@ -48,7 +48,6 @@ class Cusser:
     )
 
     _ON_ATTR_MAP = {
-        Attribute.NORMAL: curses.A_NORMAL,
         Attribute.BOLD: curses.A_BOLD,
         Attribute.DIM: curses.A_DIM,
         Attribute.ITALIC: curses.A_ITALIC,
@@ -100,10 +99,12 @@ class Cusser:
 
     def _set_attribute(self, attribute: Attribute) -> None:
         """Set the current attribute."""
+        if attribute == Attribute.NORMAL:
+            self._set_color(ColorRole.FOREGROUND, None)
+            self._set_color(ColorRole.BACKGROUND, None)
+            return self.window.attrset(curses.A_NORMAL)
+
         if attribute in self._ON_ATTR_MAP:
-            if attribute == Attribute.NORMAL:
-                self._set_color(ColorRole.FOREGROUND, None)
-                self._set_color(ColorRole.BACKGROUND, None)
             return self.window.attron(self._ON_ATTR_MAP[attribute])
 
         if attribute in self._OFF_ATTR_MAP:
