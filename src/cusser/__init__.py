@@ -135,7 +135,7 @@ class Cusser:
 
         if region == Clear.LINE:
             # https://stackoverflow.com/a/20311594/4039050
-            y, x = self.window.getyx()
+            y, x = self.window.getyx()  # noqa: W0612
             self.window.move(y, 0)
             return self.window.clrtoeol()
             # self.window.move(y, x)

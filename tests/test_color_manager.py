@@ -73,7 +73,7 @@ def test_pair_management(color_manager: ColorManager):
 
     color_manager.discard(ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")))
 
-    assert list(color_manager.pairs) == []
+    assert not list(color_manager.pairs)
 
     assert color_manager.pair_indices == {}
     assert len(color_manager.pair_indices) == 0
