@@ -14,7 +14,7 @@ from stransi.clear import Clear
 from stransi.color import ColorRole
 from stransi.cursor import CursorMove
 
-from .color_manager import ColorManager, ColorPair
+from .color_manager import ColorManager
 
 __version__ = "0.1.1"
 
@@ -33,7 +33,7 @@ def on_add_color(color: ochre.Color, manager: ColorManager) -> None:
     )
 
 
-def on_add_pair(pair: ColorPair, manager: ColorManager) -> None:
+def on_add_pair(pair: ochre.ColorPair, manager: ColorManager) -> None:
     """Initialize a color pair when it is added to the color manager."""
     curses.init_pair(manager[pair], manager[pair.foreground], manager[pair.background])
 
@@ -78,7 +78,8 @@ class Cusser:
         # We have to define the zero color pair here, otherwise we'll get a nasty
         # error later.
         self.color_manager.add_pair(
-            ColorPair(ochre.WebColor("white"), ochre.WebColor("black")), allow_zero=True
+            ochre.ColorPair(ochre.WebColor("white"), ochre.WebColor("black")),
+            allow_zero=True,
         )
 
     def addstr(self, text: Text) -> None:

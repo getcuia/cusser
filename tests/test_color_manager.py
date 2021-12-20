@@ -5,7 +5,7 @@ from typing import Optional
 import ochre
 import pytest
 
-from cusser.color_manager import ColorManager, ColorPair
+from cusser.color_manager import ColorManager
 
 
 @pytest.fixture
@@ -13,9 +13,10 @@ def color_manager() -> ColorManager:
     """Return a new ColorManager."""
     color_manager = ColorManager()
     color_manager.add(
-        ColorPair(ochre.WebColor("white"), ochre.WebColor("black")), allow_zero=True
+        ochre.ColorPair(ochre.WebColor("white"), ochre.WebColor("black")),
+        allow_zero=True,
     )
-    color_manager.add(ColorPair(ochre.WebColor("blue"), ochre.WebColor("black")))
+    color_manager.add(ochre.ColorPair(ochre.WebColor("blue"), ochre.WebColor("black")))
     return color_manager
 
 
@@ -33,7 +34,7 @@ def test_color_management(color_manager: ColorManager):
 
     # assert list(color_manager.colors) == [ochre.RGB(1, 0, 0)]
 
-    assert color_manager.color_indices == {None: -1, "0xff0000": n}
+    assert color_manager.color_indices == {None: -1, ochre.Hex("#ff0000"): n}
     assert len(color_manager.color_indices) == 2
 
     assert ochre.RGB(1, 0, 0) in color_manager
@@ -54,41 +55,47 @@ def test_pair_management(color_manager: ColorManager):
     """Test adding, getting, and removing color pairs."""
     n = color_manager.next_pair_index
 
-    color_manager.discard(ColorPair(ochre.RGB(0, 0, 1), ochre.RGB(0, 0, 0)))
-    color_manager.discard(ColorPair(ochre.RGB(0, 0, 1), ochre.RGB(0, 0, 0)))
-    color_manager.discard(ColorPair(ochre.RGB(1, 1, 1), ochre.RGB(0, 0, 0)))
+    color_manager.discard(ochre.ColorPair(ochre.RGB(0, 0, 1), ochre.RGB(0, 0, 0)))
+    color_manager.discard(ochre.ColorPair(ochre.RGB(0, 0, 1), ochre.RGB(0, 0, 0)))
+    color_manager.discard(ochre.ColorPair(ochre.RGB(1, 1, 1), ochre.RGB(0, 0, 0)))
 
-    color_manager.add(ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")))
-    color_manager.add(ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")))
+    color_manager.add(ochre.ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")))
+    color_manager.add(ochre.ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")))
 
     assert list(color_manager.pairs) == [
-        ColorPair(ochre.RGB(1, 0, 0), ochre.RGB(0, 0, 0))
+        ochre.ColorPair(ochre.RGB(1, 0, 0), ochre.RGB(0, 0, 0))
     ]
 
-    assert color_manager.pair_indices == {("0xff0000", "0x0"): n}
+    assert color_manager.pair_indices == {
+        ochre.ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")): n
+    }
     assert len(color_manager.pair_indices) == 1
 
-    assert ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")) in color_manager
+    assert ochre.ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")) in color_manager
     assert len(color_manager) == 5
 
-    color_manager.discard(ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")))
+    color_manager.discard(ochre.ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")))
 
     assert not list(color_manager.pairs)
 
     assert color_manager.pair_indices == {}
     assert len(color_manager.pair_indices) == 0
 
-    assert ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")) not in color_manager
+    assert (
+        ochre.ColorPair(ochre.Hex("#ff0000"), ochre.Hex("#000000")) not in color_manager
+    )
     assert len(color_manager) == 5
 
 
 def test_callbacks(color_manager: ColorManager):
     """Test callbacks for color and pair additions."""
     last_color: Optional[ochre.Color] = None
-    last_pair: Optional[ColorPair] = None
+    last_pair: Optional[ochre.ColorPair] = None
 
     color_manager.add(ochre.WebColor("violet"))
-    color_manager.add(ColorPair(ochre.WebColor("beige"), ochre.WebColor("lavender")))
+    color_manager.add(
+        ochre.ColorPair(ochre.WebColor("beige"), ochre.WebColor("lavender"))
+    )
     assert last_color is None
     assert last_pair is None
 
@@ -97,7 +104,7 @@ def test_callbacks(color_manager: ColorManager):
         last_color = color
         print(f"color_callback: {color} has index {manager[color]}")
 
-    def pair_callback(pair: ColorPair, manager: ColorManager) -> None:
+    def pair_callback(pair: ochre.ColorPair, manager: ColorManager) -> None:
         nonlocal last_pair
         last_pair = pair
         print(f"pair_callback: {pair} has index {manager[pair]}")
@@ -108,9 +115,9 @@ def test_callbacks(color_manager: ColorManager):
     color_manager.add(ochre.WebColor("snow"))
     assert last_color == ochre.WebColor("snow")
 
-    color_manager.add(ColorPair(ochre.WebColor("teal"), ochre.WebColor("gold")))
+    color_manager.add(ochre.ColorPair(ochre.WebColor("teal"), ochre.WebColor("gold")))
     assert last_color == ochre.WebColor("teal")  # foregrounds are added last
-    assert last_pair == ColorPair(ochre.WebColor("teal"), ochre.WebColor("gold"))
+    assert last_pair == ochre.ColorPair(ochre.WebColor("teal"), ochre.WebColor("gold"))
 
 
 def test_managing_defaults(color_manager: ColorManager):
@@ -118,16 +125,16 @@ def test_managing_defaults(color_manager: ColorManager):
     assert None in color_manager
 
     color_manager.add(None)
-    color_manager.add(ColorPair())
+    color_manager.add(ochre.ColorPair())
 
     assert None in color_manager
-    assert ColorPair() in color_manager
+    assert ochre.ColorPair() in color_manager
 
     color_manager.discard(None)
-    color_manager.discard(ColorPair())
+    color_manager.discard(ochre.ColorPair())
 
     # assert None in color_manager
-    # assert ColorPair() in color_manager
+    # assert ochre.ColorPair() in color_manager
 
 
 def test_managing_current_pair(color_manager: ColorManager):
