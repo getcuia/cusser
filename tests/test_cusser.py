@@ -9,7 +9,7 @@ from cusser._misc import _SUPPORTED_ATTRIBUTE_TAGS, _SUPPORTED_COLOR_TAGS, _app
 
 def test_version():
     """Ensure the version is correct."""
-    assert __version__ == "0.1.1"
+    assert __version__ == "0.2.0"
 
 
 def test_styles():
