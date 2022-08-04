@@ -39,7 +39,7 @@ stransi = "^0.3.0"
 pytest = "^7.1"
 mypy = "^0.961"
 bandit = "^1.7.4"
-flake8 = "^4.0.1"
+flake8 = "^5.0.4"
 black = {version = "^22.6", allow-prereleases = true}
 isort = "^5.10.1"
 pydocstyle = "^6.1.1"
