@@ -37,7 +37,7 @@ stransi = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"
-mypy = "^0.961"
+mypy = "^1.1"
 bandit = "^1.7.4"
 flake8 = "^4.0.1"
 black = {version = "^22.6", allow-prereleases = true}
