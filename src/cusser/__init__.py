@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import curses
-from dataclasses import dataclass, field
 from typing import Text
 
 import ochre
@@ -38,14 +37,13 @@ def on_add_pair(pair: ochre.ColorPair, manager: ColorManager) -> None:
     curses.init_pair(manager[pair], manager[pair.foreground], manager[pair.background])
 
 
-@dataclass
 class Cusser:
     """A curses wrapper that understands ANSI escape code sequences."""
 
     window: curses._CursesWindow
-    color_manager: ColorManager = field(default=ColorManager(
+    color_manager: ColorManager = ColorManager(
         on_add_color=on_add_color, on_add_pair=on_add_pair
-    ))
+    )
 
     _ON_ATTR_MAP = {
         Attribute.BOLD: curses.A_BOLD,
