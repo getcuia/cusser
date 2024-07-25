@@ -25,7 +25,7 @@ class ColorManager(
     on_add_color: Optional[Callable[[ochre.Color, ColorManager], None]] = None
     on_add_pair: Optional[Callable[[ochre.ColorPair, ColorManager], None]] = None
 
-    current_pair: ochre.ColorPair = ochre.ColorPair()
+    current_pair: ochre.ColorPair = field(default=ochre.ColorPair())
 
     @property
     def foreground(self) -> ochre.Color:
