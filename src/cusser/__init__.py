@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import curses
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Text
 
 import ochre
@@ -43,9 +43,9 @@ class Cusser:
     """A curses wrapper that understands ANSI escape code sequences."""
 
     window: curses._CursesWindow
-    color_manager: ColorManager = ColorManager(
+    color_manager: ColorManager = field(default=ColorManager(
         on_add_color=on_add_color, on_add_pair=on_add_pair
-    )
+    ))
 
     _ON_ATTR_MAP = {
         Attribute.BOLD: curses.A_BOLD,
